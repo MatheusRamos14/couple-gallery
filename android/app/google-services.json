@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "700021693555",
+    "project_id": "couplegallery-c4624",
+    "storage_bucket": "couplegallery-c4624.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700021693555:android:26baa96d7ed23528791e06",
+        "android_client_info": {
+          "package_name": "com.couplegalery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700021693555-kt23t42b66s472mfci3gbtql11fhdrhv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO26btGLa-SQAlDud7hWVsHvkiEMArVVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700021693555-kt23t42b66s472mfci3gbtql11fhdrhv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
