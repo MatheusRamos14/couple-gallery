@@ -1,12 +1,19 @@
 export const theme = {
     colors: {
-        main: '#D83143',
-        main_light: '#EC7E8A',
+        main: '#6968B6',
 
-        secondary: '#FFB0B8',
-        secondary_light: '#FFCCD1',
+        secondary: '#CE94C6',
+        secondary_light: '#786FB8',
 
         shape: '#fff'
     },
-    fonts: {},
+    fonts: {
+        primary_400: 'Sarabun_400Regular',
+        primary_600: 'Sarabun_600SemiBold',
+        primary_700: 'Sarabun_700Bold',
+
+        title: 'Modak_400Regular',
+
+        misc: 'ConcertOne_400Regular'
+    },
 }
