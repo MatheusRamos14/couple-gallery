@@ -1,11 +1,17 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppRoutes } from './src/routes';
+
+import { AuthRoute } from './src/routes/auth.route';
+import { StatusBar } from 'react-native';
 
 export default function App() {
   return (
     <NavigationContainer>
-      <AppRoutes />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+      />
+      <AuthRoute />
     </NavigationContainer>
   );
 }
