@@ -14,6 +14,7 @@ import { hideAsync, preventAutoHideAsync } from 'expo-splash-screen';
 
 import { theme } from './src/styles/global/styles';
 import { AuthRoute } from './src/routes/auth.route';
+import { AuthProvider } from './src/hooks/useAuth';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -42,7 +43,9 @@ export default function App() {
           translucent
           backgroundColor="transparent"
         />
-        <AuthRoute />
+        <AuthProvider>
+          <AuthRoute />
+        </AuthProvider>
       </ThemeProvider>
     </NavigationContainer>
   );
