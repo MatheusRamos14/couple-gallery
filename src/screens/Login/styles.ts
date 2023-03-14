@@ -105,12 +105,17 @@ export const SignInLabel = styled.Text`
 
 `;
 
-export const ForgotPassword = styled.Text`
+export const ForgotPassword = styled.TouchableOpacity.attrs({
+    activeOpacity: 0.7
+})`
+    align-items: center;
+    justify-content: center;
+`;
+
+export const ForgotLabel = styled.Text`
     color: ${({ theme }) => theme.colors.main};
     font-family: ${({ theme }) => theme.fonts.primary_600};
     font-size: ${RFValue(14)}px;
-
-    align-self: center;
 
     margin: 16px;
 `;

@@ -22,3 +22,9 @@ export const UserInput = styled.TextInput`
 
     margin-left: 8px;
 `;
+
+export const ToggleVisibility = styled.TouchableOpacity.attrs({
+    activeOpacity: 0.7
+})`
+    margin-right: 8px;
+`;

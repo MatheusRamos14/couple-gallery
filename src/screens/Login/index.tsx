@@ -4,9 +4,11 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import auth from '@react-native-firebase/auth';
 import * as Yup from 'yup';
 
+import { AuthStackProps } from '../../routes/auth.route';
 import background from '../../assets/background.png';
 import Logo from '../../assets/logo.svg';
 import { Input } from '../../components/Input';
+import { PasswordInput } from '../../components/PasswordInput';
 import {
     Container,
     KeyboardWrapper,
@@ -21,9 +23,12 @@ import {
     SignInButton,
     SignInLabel,
     ForgotPassword,
+    ForgotLabel
 } from './styles';
 
-export function Login() {
+type Props = AuthStackProps<'Login'>;
+
+export function Login({ navigation }: Props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -61,6 +66,10 @@ export function Login() {
         }
     }
 
+    function handleNavigateSignUp() {
+        navigation.navigate('SignUp');
+    }
+
     return (
         <Container
             source={background}
@@ -80,7 +89,7 @@ export function Login() {
                             <RegisterText>
                                 Don't you have an account?
                             </RegisterText>
-                            <RegisterButton>
+                            <RegisterButton onPress={handleNavigateSignUp}>
                                 <RegisterLabel>
                                     Sign Up
                                 </RegisterLabel>
@@ -99,7 +108,7 @@ export function Login() {
                                 onChangeText={setEmail}
                             />
 
-                            <Input
+                            <PasswordInput
                                 iconName="lock"
                                 placeholder="Password"
                                 value={password}
@@ -113,7 +122,9 @@ export function Login() {
                             </SignInButton>
 
                             <ForgotPassword>
-                                Forgot your password?
+                                <ForgotLabel>
+                                    Forgot your password?
+                                </ForgotLabel>
                             </ForgotPassword>
                         </Form>
 
