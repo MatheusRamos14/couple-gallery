@@ -4,9 +4,10 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import auth from '@react-native-firebase/auth';
 import * as Yup from 'yup';
 
-import { AuthStackProps } from '../../routes/auth.route';
 import background from '../../assets/background.png';
 import Logo from '../../assets/logo.svg';
+import { useAuth } from '../../hooks/useAuth';
+import { AuthStackProps } from '../../routes/auth.route';
 import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
 import {
@@ -29,10 +30,12 @@ import {
 type Props = AuthStackProps<'Login'>;
 
 export function Login({ navigation }: Props) {
+    const { handleUserSignIn } = useAuth();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    async function handleUserSignIn() {
+    async function handleUserLogin() {
         try {
             const data = { email, password };
             const loginSchema = Yup.object({
@@ -46,8 +49,7 @@ export function Login({ navigation }: Props) {
 
             await loginSchema.validate(data);
 
-            await auth().signInWithEmailAndPassword(email, password);
-            console.log('User account created & signed in!');
+            await handleUserSignIn(data);
         } catch (error) {
             if (error instanceof Yup.ValidationError) {
                 console.log(error.message);
@@ -115,7 +117,7 @@ export function Login({ navigation }: Props) {
                                 onChangeText={setPassword}
                             />
 
-                            <SignInButton onPress={handleUserSignIn}>
+                            <SignInButton onPress={handleUserLogin}>
                                 <SignInLabel>
                                     Login
                                 </SignInLabel>
