@@ -7,8 +7,11 @@ import * as ImagePicker from 'expo-image-picker';
 import {
     Container,
 } from './styles';
+import { MainDrawerProps } from '../../routes/main.route';
 
-export function Feed() {
+type Props = MainDrawerProps<'Feed'>
+
+export function Feed({ navigation }: Props) {
     const [image, setImage] = useState<string | null>(null);
     
     async function handleUserSavePhoto() {

@@ -1,16 +1,11 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
 
-import { Feed } from '../screens/Feed';
-import { Upload } from '../screens/Upload';
-
-const { Navigator, Screen } = createStackNavigator();
+import { useAuth } from '../hooks/useAuth';
+import { AuthRoute } from './auth.route';
+import { MainRoute } from './main.route';
 
 export function AppRoutes() {
-    return (
-        <Navigator>
-            <Screen name="Feed" component={Feed} />
-            <Screen name="Upload" component={Upload} />
-        </Navigator>
-    )
+    const { initializing } = useAuth();
+
+    return !initializing ? <AuthRoute /> : <MainRoute />
 }
