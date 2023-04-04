@@ -11,6 +11,7 @@ import { useAuth } from "./useAuth";
 interface ContextData {
     hasCouple: boolean;
     couple: ICouple;
+    photoLinks: Array<string>;
 }
 
 type Foto = {
@@ -39,16 +40,24 @@ export function PhotoProvider({ children }: ProviderProps) {
 
     const [hasCouple, setHasCouple] = useState<boolean>(false);
     const [couple, setCouple] = useState<ICouple>({} as ICouple);
+    const [photoLinks, setPhotoLinks] = useState<Array<string>>([]);
 
     async function verifyCoupleExists() {
         if (user.casal_id) {
             const casaisCollection = database().ref('casais');
 
             const data = await casaisCollection.child(user.casal_id).once('value');
+            const couple = data.val() as ICouple;
+            console.log(couple);
 
-            console.log(data.val());
-            setCouple(data.val() as ICouple);
+            setCouple(couple);
             setHasCouple(true);
+
+            for await (const foto of couple.fotos) {
+                if (photoLinks.includes(foto.foto_url)) continue;
+
+                setPhotoLinks(prev => [foto.foto_url, ...prev]);
+            }
         };
     }
 
@@ -57,7 +66,7 @@ export function PhotoProvider({ children }: ProviderProps) {
     }, [])
 
     return (
-        <PhotoContext.Provider value={{ hasCouple, couple }}>
+        <PhotoContext.Provider value={{ hasCouple, couple, photoLinks }}>
             {children}
         </PhotoContext.Provider>
     );

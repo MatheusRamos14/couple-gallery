@@ -86,9 +86,3 @@ export const Content = styled(Animated.FlatList).attrs({
     margin-top: -${RFPercentage(10)}px;
     /* margin-top: -30px; */
 `;
-
-export const Box = styled.View`
-    width: 45%;
-    height: 120px;
-    background-color: green;
-`;

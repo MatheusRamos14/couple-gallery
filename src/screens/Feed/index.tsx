@@ -10,9 +10,12 @@ import {
     Extrapolate
 } from 'react-native-reanimated';
 
-import { useAuth } from '../../hooks/useAuth';
 import background from '../../assets/background.png'
+import { useAuth } from '../../hooks/useAuth';
+import { usePhoto } from '../../hooks/usePhotos';
 import { MainDrawerProps } from '../../routes/main.drawer';
+import { ProfileInfo } from '../../components/ProfileInfo';
+import { Photo } from '../../components/Photo';
 import {
     Container,
     Background,
@@ -23,15 +26,15 @@ import {
     Greetings,
     Avatar,
     Content,
-    Box,
 } from './styles';
 import { View } from 'react-native';
-import { ProfileInfo } from '../../components/ProfileInfo';
 
 type Props = MainDrawerProps<'Feed'>
 
 export function Feed({ navigation }: Props) {
     const { user } = useAuth();
+    const { photoLinks } = usePhoto();
+
     const theme = useTheme();
 
     const scroll = useSharedValue(0);
@@ -96,7 +99,9 @@ export function Feed({ navigation }: Props) {
                 numColumns={2}
                 columnWrapperStyle={{ justifyContent: 'space-evenly' }}
                 renderItem={({ item }) => (
-                    <Box />
+                    <Photo
+                    
+                    />
                 )}
                 ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             />
