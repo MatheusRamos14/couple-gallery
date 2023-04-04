@@ -22,6 +22,7 @@ interface UserData {
     usuario_email: string;
     usuario_nome: string;
     usuario_avatar: string;
+    casal_id?: string;
 }
 
 interface ContextData {

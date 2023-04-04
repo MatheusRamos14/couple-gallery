@@ -22,7 +22,7 @@ export interface MainDrawerProps<T extends keyof MainDrawer> {
     navigation: DrawerNavigationProp<MainDrawer, T>
 }
 
-export function MainRoute() {
+export function MainDrawer() {
     const { height } = useWindowDimensions();
     const theme = useTheme();
 

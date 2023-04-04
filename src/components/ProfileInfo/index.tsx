@@ -14,9 +14,14 @@ import {
 interface Props {
     photoURL?: string;
     username: string;
+    greetings?: boolean;
 }
 
-export function ProfileInfo({ photoURL, username }: Props) {
+export function ProfileInfo({
+    photoURL,
+    username,
+    greetings = true,
+}: Props) {
     const theme = useTheme();
 
     return (
@@ -35,14 +40,16 @@ export function ProfileInfo({ photoURL, username }: Props) {
                 )}
             </Avatar>
 
-            <Content>
-                <Greetings>
-                    Hello{username && ', ' + username}!{'\n'}
-                    <EditInfo>
-                        Click to edit profile
-                    </EditInfo>
-                </Greetings>
-            </Content>
+            {greetings && (
+                <Content>
+                    <Greetings>
+                        Hello{username && ', ' + username}!{'\n'}
+                        <EditInfo>
+                            Click to edit profile
+                        </EditInfo>
+                    </Greetings>
+                </Content>
+            )}
         </Container>
     )
 }

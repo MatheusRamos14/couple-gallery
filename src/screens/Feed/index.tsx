@@ -1,89 +1,106 @@
-import React, { useState } from 'react';
-import { Button, Image } from 'react-native';
-import { utils } from '@react-native-firebase/app';
-import storage from '@react-native-firebase/storage';
-import * as ImagePicker from 'expo-image-picker';
+import React from 'react';
+import { Feather } from '@expo/vector-icons';
+import { useTheme } from 'styled-components/native';
+import {
+    useSharedValue,
+    useAnimatedStyle,
+    useAnimatedScrollHandler,
+    interpolate,
+    runOnJS,
+    Extrapolate
+} from 'react-native-reanimated';
 
+import { useAuth } from '../../hooks/useAuth';
+import background from '../../assets/background.png'
+import { MainDrawerProps } from '../../routes/main.drawer';
 import {
     Container,
+    Background,
+    Header,
+    Titles,
+    Menu,
+    Date,
+    Greetings,
+    Avatar,
+    Content,
+    Box,
 } from './styles';
-import { MainDrawerProps } from '../../routes/main.route';
+import { View } from 'react-native';
+import { ProfileInfo } from '../../components/ProfileInfo';
 
 type Props = MainDrawerProps<'Feed'>
 
 export function Feed({ navigation }: Props) {
-    const [image, setImage] = useState<string | null>(null);
-    
-    async function handleUserSavePhoto() {
-        try {
-            if (!image) return;
-            console.log("Iniciando salvamento da foto")
-            
-            const reference = storage().ref('avatars/deefb2f1-e4cb-4809-84f4-35f94a78a106/avatar.png'); 
-            await reference.putFile(image, { contentType: 'image' })
+    const { user } = useAuth();
+    const theme = useTheme();
 
-            console.log("Arquivo salvo!")
-        } catch (error) {
-            console.log(error)
+    const scroll = useSharedValue(0);
+
+    const onScroll = useAnimatedScrollHandler({
+        onScroll(event, context) {
+            scroll.value = event.contentOffset.y;
+            console.log(scroll.value)
         }
-    }
+    })
 
-    const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
-
-        console.log(result);
-
-        if (result.canceled) return;
-
-        setImage(result.assets[0].uri);
-    };
-
-    const handleGetPhoto = async () => {
-        const reference = storage().ref('images/github.png'); 
-
-        const url = await reference.getDownloadURL();
-
-        console.log(url)
-    }
-
-    const handleListPhotos = async () => {
-        const reference = storage().ref('images'); 
-
-        const list = await reference.list()
-        
-        console.log(list.items);
-    }
+    const style = useAnimatedStyle(() => {
+        return {
+            height: `${interpolate(
+                scroll.value,
+                [0, 175],
+                [50, 80],
+                Extrapolate.CLAMP
+            )}%`,
+            borderTopRightRadius: interpolate(scroll.value, [0, 175], [65, 20], Extrapolate.CLAMP),
+            borderTopLeftRadius: interpolate(scroll.value, [0, 175], [65, 20], Extrapolate.CLAMP)
+        }
+    })
 
     return (
         <Container>
-            <Button
-                title='Recuperar lista'
-                onPress={handleListPhotos}
+            <Background source={background} resizeMode='stretch' />
+
+            <Header>
+                <Titles>
+                    <Menu onPress={navigation.openDrawer}>
+                        <Feather
+                            name='menu'
+                            size={32}
+                            color={theme.colors.shape}
+                        />
+                    </Menu>
+
+                    <Date>
+                        11 MAR 2023
+                    </Date>
+
+                    <Greetings>
+                        Welcome back, Matheus!
+                    </Greetings>
+                </Titles>
+
+                <Avatar>
+                    <ProfileInfo
+                        greetings={false}
+                        photoURL={user.usuario_avatar}
+                        username={user.usuario_nome}
+                    />
+                </Avatar>
+            </Header>
+
+            <Content
+                onScroll={onScroll}
+                style={style}
+                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                keyExtractor={item => String(item)}
+                numColumns={2}
+                columnWrapperStyle={{ justifyContent: 'space-evenly' }}
+                renderItem={({ item }) => (
+                    <Box />
+                )}
+                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             />
 
-            <Button
-                title='Recuperar foto'
-                onPress={handleGetPhoto}
-            />
-
-            <Button
-                title='Salvar foto'
-                onPress={handleUserSavePhoto}
-                disabled={image === null}
-            />
-
-            <Button
-                title='Escolher foto'
-                onPress={pickImage}
-            />
-
-            {image && <Image source={{ uri: image }} />}
         </Container>
     )
 }

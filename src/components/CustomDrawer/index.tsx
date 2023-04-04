@@ -10,7 +10,7 @@ import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '../../hooks/useAuth';
 import { ProfileInfo } from '../ProfileInfo';
-import { MainDrawer } from '../../routes/main.route';
+import { MainDrawer } from '../../routes/main.drawer';
 import {
     Container,
     ItemContainer,
