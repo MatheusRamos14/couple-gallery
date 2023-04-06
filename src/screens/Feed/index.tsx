@@ -94,13 +94,13 @@ export function Feed({ navigation }: Props) {
             <Content
                 onScroll={onScroll}
                 style={style}
-                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                data={photoLinks}
                 keyExtractor={item => String(item)}
                 numColumns={2}
-                columnWrapperStyle={{ justifyContent: 'space-evenly' }}
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
                 renderItem={({ item }) => (
                     <Photo
-                    
+                        source={{ uri: item }}
                     />
                 )}
                 ItemSeparatorComponent={() => <View style={{ height: 10 }} />}

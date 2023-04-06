@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { Dimensions } from 'react-native';
+import { Dimensions, FlatList, FlatListProps } from 'react-native';
 import { RFValue, RFPercentage } from 'react-native-responsive-fontsize';
 import Animated from 'react-native-reanimated';
 
@@ -67,22 +67,20 @@ export const Avatar = styled.TouchableOpacity.attrs({
     justify-content: center;
 `;
 
-export const Content = styled(Animated.FlatList).attrs({
+export const Content = styled(
+    Animated.FlatList as new (props: FlatListProps<string>) => Animated.FlatList<string>
+).attrs({
     contentContainerStyle: {
         width: '100%',
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'flex-start',
 
         paddingTop: 60,
-        paddingHorizontal: 30,
+        paddingHorizontal: 10,
     }
 })`
     width: 100%;
     background-color: ${({ theme }) => theme.colors.shape};
 
-    /* border-top-right-radius: 65px;
-    border-top-left-radius: 65px; */
-
     margin-top: -${RFPercentage(10)}px;
-    /* margin-top: -30px; */
 `;
