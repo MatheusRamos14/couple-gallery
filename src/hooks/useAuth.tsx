@@ -30,6 +30,7 @@ interface ContextData {
     user: UserData;
     handleUserRegister: (data: SignUpData) => Promise<void>;
     handleUserSignIn: (data: LoginData) => Promise<void>;
+    handleChangeAvatar: (data: string) => Promise<void>;
 }
 
 interface ProviderProps {
@@ -45,11 +46,8 @@ export function AuthProvider({ children }: ProviderProps) {
     async function handleUserRegister(data: SignUpData) {
         try {
             const usuariosCollection = database().ref('usuarios');
-            const registers = (await usuariosCollection.once('value')).val() as Array<UserData>;
-            const total = registers.length;
 
             console.log("IMAGEM", data.image);
-            console.log(total, registers)
 
             const user = await auth()
                 .createUserWithEmailAndPassword(data.email, data.password);
@@ -68,8 +66,8 @@ export function AuthProvider({ children }: ProviderProps) {
                 usuario_nome: data.name,
                 usuario_avatar: userAvatarUrl
             }
-          
-            await usuariosCollection.child(String(total)).set(newUser);
+
+            await usuariosCollection.child(user.user.uid).set(newUser);
 
             setUser(newUser);
             setInitializing(false);
@@ -82,21 +80,46 @@ export function AuthProvider({ children }: ProviderProps) {
         try {
             const userAuth = await auth().signInWithEmailAndPassword(data.email, data.password);
 
-            const usuariosCollection = database().ref('usuarios');
-            const registers = (await usuariosCollection.once('value')).val() as Array<UserData>;
-            const usuarioInfo = registers.filter(register => register.usuario_id === userAuth.user.uid)[0];
+            const usuariosCollection = database()
+                .ref('usuarios').child(userAuth.user.uid);
+            const userInfo = (await usuariosCollection.once('value')).val() as UserData;
 
-            console.log(usuarioInfo);
-
-            setUser(usuarioInfo)
+            setUser(userInfo);
             setInitializing(false)
         } catch (error) {
             throw new Error(error as any);
         }
     }
 
+    async function handleChangeAvatar(picture_path: string) {
+        try {
+            const usuariosCollection = database()
+                .ref('usuarios').child(user.usuario_id);
+
+            const avatarsRef = storage().ref(`avatars/${user.usuario_id}.png`);
+            await avatarsRef.putFile(picture_path, { contentType: 'image' });
+
+            const pic_url = await avatarsRef.getDownloadURL();
+
+            await usuariosCollection.update({
+                usuario_avatar: pic_url
+            })
+
+            const userInfo = (await usuariosCollection.once('value')).val() as UserData;
+            setUser(userInfo);
+        } catch (error) {
+            throw new Error(error as any);
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ initializing, user, handleUserRegister, handleUserSignIn }}>
+        <AuthContext.Provider value={{
+            initializing,
+            user,
+            handleUserRegister,
+            handleUserSignIn,
+            handleChangeAvatar
+        }}>
             {children}
         </AuthContext.Provider>
     );
