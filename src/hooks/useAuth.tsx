@@ -18,11 +18,11 @@ interface SignUpData extends LoginData {
 }
 
 interface UserData {
-    usuario_id: string;
-    usuario_email: string;
-    usuario_nome: string;
-    usuario_avatar: string;
-    casal_id?: string;
+    user_id: string;
+    user_email: string;
+    user_name: string;
+    user_avatar: string;
+    couple_id: string;
 }
 
 interface ContextData {
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: ProviderProps) {
 
     async function handleUserRegister(data: SignUpData) {
         try {
-            const usuariosCollection = database().ref('usuarios');
+            const usersCollection = database().ref('users');
 
             console.log("IMAGEM", data.image);
 
@@ -61,13 +61,14 @@ export function AuthProvider({ children }: ProviderProps) {
             }
 
             const newUser = {
-                usuario_id: user.user.uid,
-                usuario_email: data.email,
-                usuario_nome: data.name,
-                usuario_avatar: userAvatarUrl
+                user_id: user.user.uid,
+                user_email: data.email,
+                user_name: data.name,
+                user_avatar: userAvatarUrl,
+                couple_id: ""
             }
 
-            await usuariosCollection.child(user.user.uid).set(newUser);
+            await usersCollection.child(user.user.uid).set(newUser);
 
             setUser(newUser);
             setInitializing(false);
@@ -80,9 +81,9 @@ export function AuthProvider({ children }: ProviderProps) {
         try {
             const userAuth = await auth().signInWithEmailAndPassword(data.email, data.password);
 
-            const usuariosCollection = database()
-                .ref('usuarios').child(userAuth.user.uid);
-            const userInfo = (await usuariosCollection.once('value')).val() as UserData;
+            const usersCollection = database()
+                .ref('users').child(userAuth.user.uid);
+            const userInfo = (await usersCollection.once('value')).val() as UserData;
 
             setUser(userInfo);
             setInitializing(false)
@@ -93,19 +94,19 @@ export function AuthProvider({ children }: ProviderProps) {
 
     async function handleChangeAvatar(picture_path: string) {
         try {
-            const usuariosCollection = database()
-                .ref('usuarios').child(user.usuario_id);
+            const usersCollection = database()
+                .ref('usuarios').child(user.user_id);
 
-            const avatarsRef = storage().ref(`avatars/${user.usuario_id}.png`);
+            const avatarsRef = storage().ref(`avatars/${user.user_id}.png`);
             await avatarsRef.putFile(picture_path, { contentType: 'image' });
 
             const pic_url = await avatarsRef.getDownloadURL();
 
-            await usuariosCollection.update({
-                usuario_avatar: pic_url
+            await usersCollection.update({
+                user_avatar: pic_url
             })
 
-            const userInfo = (await usuariosCollection.once('value')).val() as UserData;
+            const userInfo = (await usersCollection.once('value')).val() as UserData;
             setUser(userInfo);
         } catch (error) {
             throw new Error(error as any);

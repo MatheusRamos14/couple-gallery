@@ -6,6 +6,7 @@ import {
 
 import { MainDrawer } from './main.drawer';
 import { Connect } from '../screens/Connect';
+import { usePhoto } from '../hooks/usePhotos';
 
 type MainStack = {
     MainDrawer: undefined;
@@ -19,10 +20,14 @@ export interface MainStackProps<T extends keyof MainStack> {
 const { Navigator, Screen } = createStackNavigator<MainStack>();
 
 export function MainStack() {
+    const { hasCouple } = usePhoto();
+
+    if (!hasCouple) return <Connect />
+
     return (
         <Navigator screenOptions={{ headerShown: false }}>
             <Screen name="MainDrawer" component={MainDrawer} />
-            <Screen name="Connect" component={Connect} />
+            {/* <Screen name="Connect" component={Connect} /> */}
         </Navigator>
     )
 }

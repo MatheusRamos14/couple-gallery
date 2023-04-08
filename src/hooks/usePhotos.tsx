@@ -42,22 +42,24 @@ export function PhotoProvider({ children }: ProviderProps) {
     const [couple, setCouple] = useState<ICouple>({} as ICouple);
     const [photoLinks, setPhotoLinks] = useState<Array<string>>([]);
 
-    async function verifyCoupleExists() {
-        if (user.casal_id) {
-            const casaisCollection = database().ref('casais');
+    async function createCouple(usuario_id: string) {
+        try {   
 
-            const data = await casaisCollection.child(user.casal_id).once('value');
+        } catch (error) {
+            throw new Error(error as any);
+        }
+    }
+
+    async function verifyCoupleExists() {
+        if (user.couple_id) {
+            const coupleCollection = database().ref('couple');
+
+            const data = await coupleCollection.child(user.couple_id).once('value');
             const couple = data.val() as ICouple;
             console.log(couple);
 
             setCouple(couple);
-            setHasCouple(true);
-
-            for await (const foto of couple.fotos) {
-                if (photoLinks.includes(foto.foto_url)) continue;
-
-                setPhotoLinks(prev => [foto.foto_url, ...prev]);
-            }
+            setHasCouple(true);            
         };
     }
 
