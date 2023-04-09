@@ -27,7 +27,9 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-    font-size: ${RFValue(16)}px;
+    flex: 1;
+
+    font-size: ${RFValue(14)}px;
     font-family: ${({ theme }) => theme.fonts.primary_400};
     color: ${({ theme }) => theme.colors.dark};
 
