@@ -1,6 +1,7 @@
 import React, {
     createContext,
     useContext,
+    useEffect,
     useState
 } from "react";
 import auth from '@react-native-firebase/auth';
@@ -31,6 +32,7 @@ interface ContextData {
     handleUserRegister: (data: SignUpData) => Promise<void>;
     handleUserSignIn: (data: LoginData) => Promise<void>;
     handleChangeAvatar: (data: string) => Promise<void>;
+    hasCouple: boolean;
 }
 
 interface ProviderProps {
@@ -42,6 +44,7 @@ const AuthContext = createContext<ContextData>({} as ContextData);
 export function AuthProvider({ children }: ProviderProps) {
     const [initializing, setInitializing] = useState<boolean>(true);
     const [user, setUser] = useState<UserData>({} as UserData);
+    const [hasCouple, setHasCouple] = useState<boolean>(false);
 
     async function handleUserRegister(data: SignUpData) {
         try {
@@ -113,13 +116,37 @@ export function AuthProvider({ children }: ProviderProps) {
         }
     }
 
+    useEffect(() => {
+        if (!(user.user_id)) return;
+
+        const usersCollection = database()
+            .ref('users').child(user.user_id);
+
+        const value = usersCollection.on('value', (snapshot) => {
+            if (!(snapshot.exists())) return;
+            console.log("USERSNAPSHOT")
+
+            const userInfo = snapshot.val() as UserData;            
+            console.log(userInfo.user_id);
+
+            if (userInfo.couple_id) {
+                setHasCouple(true);
+            }
+        })
+
+        return () => {
+            usersCollection.off("value", value);
+        }
+    }, [user])
+
     return (
         <AuthContext.Provider value={{
             initializing,
             user,
             handleUserRegister,
             handleUserSignIn,
-            handleChangeAvatar
+            handleChangeAvatar,
+            hasCouple
         }}>
             {children}
         </AuthContext.Provider>

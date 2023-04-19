@@ -9,7 +9,7 @@ import database from '@react-native-firebase/database';
 import { useAuth } from "./useAuth";
 
 interface ContextData {
-    hasCouple: boolean;
+    // hasCouple: boolean;
     couple: ICouple;
     photoLinks: Array<string>;
 }
@@ -38,7 +38,6 @@ const PhotoContext = createContext<ContextData>({} as ContextData);
 export function PhotoProvider({ children }: ProviderProps) {
     const { user } = useAuth();
 
-    const [hasCouple, setHasCouple] = useState<boolean>(false);
     const [couple, setCouple] = useState<ICouple>({} as ICouple);
     const [photoLinks, setPhotoLinks] = useState<Array<string>>([]);
 
@@ -59,7 +58,7 @@ export function PhotoProvider({ children }: ProviderProps) {
             console.log(couple);
 
             setCouple(couple);
-            setHasCouple(true);            
+            // setHasCouple(true);            
         };
     }
 
@@ -68,7 +67,7 @@ export function PhotoProvider({ children }: ProviderProps) {
     }, [])
 
     return (
-        <PhotoContext.Provider value={{ hasCouple, couple, photoLinks }}>
+        <PhotoContext.Provider value={{ couple, photoLinks }}>
             {children}
         </PhotoContext.Provider>
     );
